@@ -20,4 +20,8 @@ export class UsersService {
     const user = new this.userModel({ username, password: hashed });
     return user.save();
   }
+
+  async deleteUser(userId: string): Promise<UserDocument | null> {
+    return this.userModel.findByIdAndDelete(userId);
+  }
 }

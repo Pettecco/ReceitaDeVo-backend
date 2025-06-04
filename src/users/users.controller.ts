@@ -1,16 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
   NotFoundException,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User, UserDocument } from './schemas/user.schema';
+import { UserDocument } from './schemas/user.schema';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -30,6 +32,7 @@ export class UsersController {
     return result;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':username')
   async findUser(@Param('username') username: string) {
     const user: UserDocument | null =
@@ -41,5 +44,11 @@ export class UsersController {
     const { password, ...result } = user.toObject();
 
     return result;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
   }
 }
