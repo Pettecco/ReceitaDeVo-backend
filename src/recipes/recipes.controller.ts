@@ -13,13 +13,7 @@ import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiConsumes,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('recipes')
 @ApiBearerAuth()
@@ -34,7 +28,7 @@ export class RecipesController {
   create(@Body() createRecipeDto: CreateRecipeDto, @Request() req) {
     return this.recipesService.create({
       ...createRecipeDto,
-      authorId: req.user._id,
+      authorId: req.user.userId,
     });
   }
 
@@ -62,7 +56,7 @@ export class RecipesController {
     @Body() updateRecipeDto: UpdateRecipeDto,
     @Request() req,
   ) {
-    return this.recipesService.update(id, updateRecipeDto, req.user._id);
+    return this.recipesService.update(id, updateRecipeDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -71,7 +65,7 @@ export class RecipesController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden. User is not owner.' })
   @ApiResponse({ status: 404, description: 'Recipe not found.' })
-  remove(@Param('id') id: string, @Request() req) {
-    return this.recipesService.remove(id, req.user._id);
+  remove(@Param('id') id: string) {
+    return this.recipesService.remove(id);
   }
 }

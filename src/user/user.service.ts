@@ -30,7 +30,10 @@ export class UsersService {
     return this.userModel.findByIdAndDelete(userId);
   }
 
-  async updateAvatar(userId: string, buffer: Buffer): Promise<UserDocument> {
+  async updateAvatar(
+    userId: string,
+    buffer: Buffer,
+  ): Promise<Omit<User, 'password'>> {
     const type = await fileType.fromBuffer(buffer);
 
     if (!type || !['image/jpeg', 'image/png'].includes(type.mime)) {
@@ -38,18 +41,22 @@ export class UsersService {
     }
 
     const base64Image = buffer.toString('base64');
-    const updatedUser = await this.userModel.findByIdAndUpdate(
-      userId,
-      {
-        avatarBase64: base64Image,
-        avatarMimeType: type.mime,
-      },
-      { new: true },
-    );
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(
+        userId,
+        {
+          avatarBase64: base64Image,
+          avatarMimeType: type.mime,
+        },
+        { new: true },
+      )
+      .lean();
 
     if (!updatedUser) {
       throw new NotFoundException('User not found');
     }
-    return updatedUser;
+
+    const { password, ...userWithoutPassword } = updatedUser;
+    return userWithoutPassword as Omit<User, 'password'>;
   }
 }

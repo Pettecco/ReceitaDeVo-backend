@@ -16,7 +16,7 @@ export class Recipe {
   steps: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  author: mongoose.Types.ObjectId;
+  authorId: mongoose.Types.ObjectId;
 
   @Prop()
   imageBase64?: string;
