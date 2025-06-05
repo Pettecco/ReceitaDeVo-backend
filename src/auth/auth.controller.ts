@@ -1,13 +1,22 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LoginResponseDto } from './dto/login-response.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful.',
+    type: LoginResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Invalid credentials.' })
+  async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     const user = await this.authService.validateUser(
       loginDto.username,
       loginDto.password,
