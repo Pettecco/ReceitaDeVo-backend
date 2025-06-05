@@ -12,7 +12,10 @@ export class User {
   password: string;
 
   @Prop()
-  avatarUrl?: string;
+  avatarBase64?: string;
+
+  @Prop()
+  avatarMimeType?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

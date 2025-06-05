@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,12 +8,19 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Patch,
   Post,
+  StreamableFile,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDocument } from './schemas/user.schema';
 import { AuthGuard } from '@nestjs/passport';
+import { Readable } from 'stream';
+import { FileInterceptor } from '@nestjs/platform-express';
+import type { Multer } from 'multer';
 
 @Controller('users')
 export class UsersController {
@@ -44,6 +52,38 @@ export class UsersController {
     const { password, ...result } = user.toObject();
 
     return result;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':username/avatar')
+  async getAvatar(
+    @Param('username') username: string,
+  ): Promise<StreamableFile> {
+    const user = await this.usersService.findByUsername(username);
+
+    if (!user?.avatarBase64 || !user?.avatarMimeType) {
+      throw new NotFoundException('No avatar found');
+    }
+
+    const buffer = Buffer.from(user.avatarBase64, 'base64');
+    const stream = Readable.from(buffer);
+
+    return new StreamableFile(stream, {
+      type: user.avatarMimeType,
+    });
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':id/avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  async updateAvatar(
+    @Param('id') userId: string,
+    @UploadedFile() file: Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+    return this.usersService.updateAvatar(userId, file.buffer);
   }
 
   @UseGuards(AuthGuard('jwt'))
