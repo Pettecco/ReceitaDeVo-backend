@@ -58,6 +58,14 @@ export class CreateRecipeDto {
   @IsNotEmpty()
   steps: string;
 
+  @IsString()
+  @IsOptional()
+  imageBase64?: string;
+
+  @IsString()
+  @IsOptional()
+  imageMimeType?: string;
+
   @ApiProperty({
     example: '64b7f2c2e4b0a5d1c8e4a123',
     description: 'ID of the user who is the author of the recipe',
