@@ -22,6 +22,12 @@ export class Recipe {
   @Prop({ type: [CommentSchema], default: [] })
   comments: RecipeComment[];
 
+  @Prop({ default: 0 })
+  likes: number;
+
+  @Prop({ default: 0 })
+  views: number;
+
   @Prop()
   imageBase64?: string;
 
