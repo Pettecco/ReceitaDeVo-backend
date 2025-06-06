@@ -13,7 +13,12 @@ import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('recipes')
 @ApiBearerAuth()
@@ -23,6 +28,7 @@ export class RecipesController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
+  @ApiOperation({ summary: 'Create a recipe' })
   @ApiResponse({ status: 201, description: 'Recipe created successfully.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   create(@Body() createRecipeDto: CreateRecipeDto, @Request() req) {
@@ -33,12 +39,14 @@ export class RecipesController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all recipes' })
   @ApiResponse({ status: 200, description: 'List of all recipes.' })
   findAll() {
     return this.recipesService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get one recipe by id' })
   @ApiResponse({ status: 200, description: 'Recipe found.' })
   @ApiResponse({ status: 404, description: 'Recipe not found.' })
   findOne(@Param('id') id: string) {
@@ -47,6 +55,7 @@ export class RecipesController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
+  @ApiOperation({ summary: 'Update recipe by id' })
   @ApiResponse({ status: 200, description: 'Recipe updated successfully.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden. User is not owner.' })
@@ -61,6 +70,7 @@ export class RecipesController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete recipe by id' })
   @ApiResponse({ status: 200, description: 'Recipe deleted successfully.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden. User is not owner.' })
