@@ -6,8 +6,9 @@ import {
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { InjectModel } from '@nestjs/mongoose';
+import { RecipeComment } from './schemas/comments.schema';
 import { Recipe, RecipeDocument } from './schemas/recipe.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class RecipesService {
@@ -58,5 +59,24 @@ export class RecipesService {
     }
 
     return this.recipeModel.findByIdAndDelete(id).exec();
+  }
+
+  async addComment(recipeId: string, userId: string, text: string) {
+    const recipe = await this.recipeModel.findById(recipeId);
+
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found');
+    }
+
+    const comment: RecipeComment = {
+      user: new Types.ObjectId(userId),
+      text,
+      createdAt: new Date(),
+    } as RecipeComment;
+
+    recipe.comments.push(comment);
+
+    await recipe.save();
+    return recipe;
   }
 }

@@ -78,4 +78,17 @@ export class RecipesController {
   remove(@Param('id') id: string) {
     return this.recipesService.remove(id);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':id/comments')
+  @ApiOperation({ summary: 'Add a comment to a recipe' })
+  @ApiResponse({ status: 201, description: 'Comment added successfully.' })
+  @ApiResponse({ status: 404, description: 'Recipe not found.' })
+  addComment(
+    @Param('id') recipeId: string,
+    @Body('text') text: string,
+    @Request() req,
+  ) {
+    return this.recipesService.addComment(recipeId, req.user.userId, text);
+  }
 }

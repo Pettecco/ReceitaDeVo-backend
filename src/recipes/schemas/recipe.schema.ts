@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { CommentSchema } from './comments.schema';
+import { RecipeComment, CommentSchema } from './comments.schema';
 
 @Schema({ timestamps: true })
 export class Recipe {
@@ -20,7 +20,7 @@ export class Recipe {
   authorId: mongoose.Types.ObjectId;
 
   @Prop({ type: [CommentSchema], default: [] })
-  comments: Comment[];
+  comments: RecipeComment[];
 
   @Prop()
   imageBase64?: string;
