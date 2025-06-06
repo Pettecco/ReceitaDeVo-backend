@@ -9,12 +9,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { RecipeComment } from './schemas/comments.schema';
 import { Recipe, RecipeDocument } from './schemas/recipe.schema';
 import { Model, Types } from 'mongoose';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class RecipesService {
   constructor(
     @InjectModel(Recipe.name)
     private readonly recipeModel: Model<RecipeDocument>,
+    private readonly redisService: RedisService,
   ) {}
 
   async create(createRecipeDto: CreateRecipeDto): Promise<Recipe> {
