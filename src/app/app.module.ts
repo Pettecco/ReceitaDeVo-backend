@@ -6,6 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RecipesModule } from 'src/recipes/recipes.module';
+import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { RecipesModule } from 'src/recipes/recipes.module';
     UsersModule,
     AuthModule,
     RecipesModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
