@@ -12,6 +12,7 @@ API backend para um sistema de receitas culinárias, construída com NestJS, Mon
 - Likes únicos por usuário em cada receita usando Redis
 - Endpoints protegidos por autenticação JWT
 - Documentação automática com Swagger
+- Sincronização entre Redis e MongoDB para persistência de dados
 
 ## Tecnologias
 
