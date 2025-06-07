@@ -61,7 +61,7 @@ Para rodar o projeto localmente sem usar Docker, siga os passos abaixo:
 
    * Garanta que o MongoDB e o Redis estejam instalados e rodando na sua máquina.
 
-   * Configure as variáveis de ambiente no arquivo .env com as URLs corretas para seus serviços locais.
+   * Configure as variáveis de ambiente no arquivo .env com as URLs corretas para seus serviços locais (ex: localhost).
 
    * Instale as dependências (se ainda não instalou):
 
