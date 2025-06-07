@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RecipesModule } from 'src/recipes/recipes.module';
 import { RedisModule } from 'src/redis/redis.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { RedisSyncService } from 'src/redis/redis-sync.service';
 
 @Module({
   imports: [
@@ -16,8 +18,9 @@ import { RedisModule } from 'src/redis/redis.module';
     AuthModule,
     RecipesModule,
     RedisModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RedisSyncService],
 })
 export class AppModule {}
