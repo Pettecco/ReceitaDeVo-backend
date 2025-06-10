@@ -84,6 +84,28 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
+  @Get(':id')
+  @ApiOperation({ summary: 'Get user details by user ID' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'User found.',
+    type: UserResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'User not found.' })
+  async findUserById(@Param('id') id: string): Promise<UserResponseDto> {
+    const user = await this.usersService.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const { password, ...result } = user.toObject();
+
+    return result;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Get(':username/avatar')
   @ApiOperation({ summary: 'Get user avatar as image stream' })
   @ApiParam({ name: 'username', description: 'Username of the user' })

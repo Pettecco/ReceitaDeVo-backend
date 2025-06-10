@@ -19,6 +19,10 @@ export class UsersService {
     return this.userModel.findOne({ username });
   }
 
+  async findById(userId: string): Promise<UserDocument | null> {
+    return this.userModel.findById(userId);
+  }
+
   async create(username: string, password: string): Promise<UserDocument> {
     const hashed = await bcrypt.hash(password, 10);
 
