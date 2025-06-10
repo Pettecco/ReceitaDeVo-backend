@@ -84,7 +84,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @Get(':id')
+  @Get('id/:id')
   @ApiOperation({ summary: 'Get user details by user ID' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({
